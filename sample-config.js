@@ -27,10 +27,18 @@ config.watch = {
 
 config.tradingAdvisor = {
   enabled: true,
-  method: 'MACD',
-  candleSize: 60,
-  historySize: 10,
+  method: 'EMA',
+  candleSize: 60 * 4,
+  historySize: 21,
 }
+
+// EMA settings:
+config.EMA = {
+  //Fast EMA Look-back period
+  fast: 10,
+  //Slow EMA Look-back period
+  slow: 21
+};
 
 // MACD settings:
 config.MACD = {
@@ -68,8 +76,8 @@ config.paperTrader = {
     currency: 100,
   },
   // how much fee in % does each trade cost?
-  feeMaker: 0.15,
-  feeTaker: 0.25,
+  feeMaker: 0.075,
+  feeTaker: 0.075,
   feeUsing: 'maker',
   // how much slippage/spread should Gekko assume per trade?
   slippage: 0.05,
