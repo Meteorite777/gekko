@@ -6,11 +6,11 @@ strat.init = function() {
   // your code
   console.log(this.settings);
 
-  this.addTulipIndicator('fast', 'ema', {
+  this.addTulipIndicator('emaFast', 'ema', {
       optInTimePeriod: this.settings.fast
   });
 
-  this.addTulipIndicator('slow', 'ema', {
+  this.addTulipIndicator('emaSlow', 'ema', {
     optInTimePeriod: this.settings.slow
 });
 
