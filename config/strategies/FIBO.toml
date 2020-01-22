@@ -1,0 +1,7 @@
+optInTimePeriod = 14
+optInAcceleration = 0
+optInMaximum = 0
+histSize = 1000
+eps = 0.1
+ema = 21
+adx = 50

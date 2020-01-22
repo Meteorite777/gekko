@@ -1,0 +1,3 @@
+lookbackhours = 24
+percentagedrop = 0.10
+stoplossPercent = 0.02
