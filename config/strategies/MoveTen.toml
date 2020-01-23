@@ -1,3 +1,5 @@
-lookbackhours = 24
+lookbackhours = 48
 percentagedrop = 0.10
-stoplossPercent = 0.02
+stoplossPercent = 0.04
+maxstoplossPercent = 0.07
+exposure = 0.005

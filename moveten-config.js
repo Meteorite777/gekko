@@ -34,13 +34,19 @@ config.tradingAdvisor = {
 // EMA settings:
 config.MoveTen = {
   //Lookback time period in hrs to compare
-  lookbackhours: 24,
+  lookbackhours: 48,
   //Max drop threshold to buy during lookback-window
   //Keep this number positive and as a percent (use decimal places).
   percentagedrop: 0.10,
   //Trailing stoploss percentage
   //Keep this number positive and as a percent (use decimal places).
-  stoplossPercent: 0.02
+  stoplossPercent: 0.04,
+  //Trailing stoploss percentage
+  //Keep this number positive and as a percent (use decimal places).
+  maxstoplossPercent: 0.07,
+  //Trailing stoploss percentage growth per candle
+  //Keep this number positive and as a percent (use decimal places).
+  exposure: 0.005
 };
 
 // EMA settings:

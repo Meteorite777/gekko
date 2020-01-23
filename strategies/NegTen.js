@@ -11,20 +11,21 @@ class LinkedListNode {
 var strat = {};
 var candleList = null;
 var lastCandleNode = null;
-
-var lookbackhours = 24;
-var percentagedrop = 0.07; //Keep this number positive and as a percent (use decimal places).
-var stoplossPercent = 0.02 //Positive percentage.;
+var lookbackhours = null; //Lookback time period in hrs to compare
+var percentagedrop = null; //Keep this number positive and as a percent (use decimal places).
+var stoplossPercent = null; //Positive percentage.
 
 var state = "READY_TO_BUY"; // "READY_TO_SELL"
 var stoplossValue;
 
-
 // Prepare everything our strat needs
 strat.init = function() {
   // your code
+	console.log("Strategy Parameters Configured:");
   console.log(this.settings);
-
+	lookbackhours = this.settings.lookbackhours; //Lookback time period in hrs to compare
+	percentagedrop = this.settings.percentagedrop; //Keep this number positive and as a percent (use decimal places).
+	stoplossPercent = this.settings.stoplossPercent; //Positive percentage.
 }
 
 // What happens on every new candle?
@@ -80,7 +81,7 @@ strat.check = function(candle) {
 		//console.log("MinPrice: " + minPrice);
 		//console.log("MaxPrice: " + maxPrice);
 		if(maxPrice - percentAsValue > candle.close){
-			//Check for at least one green candle before this none
+			//Check for confirmation that atleast one green candle closed before buy.
 			if(lastCandleNode.prevCandleNode.thisCandle.close <= candle.close){
 				//BUY
 				this.advice("long");
@@ -106,8 +107,15 @@ strat.check = function(candle) {
 				lastCandleNode = null;
 				state = "READY_TO_BUY";
 			}
+			if(lastCandleNode.prevCandleNode.thisCandle.close < candle.close){
+				//Going upwards; loosen up stoploss
+				stoplossValue = Math.max(candle.close - (stoplossPercent * candle.close), stoplossValue);
+			}
+			else{
+				//Going downwards; tighten up stoploss
+				stoplossValue = Math.max(candle.close + (stoplossPercent * candle.close), stoplossValue);
+			}
 
-			stoplossValue = Math.max(candle.close - (stoplossPercent * candle.close), stoplossValue);
 
 			break;
 	}

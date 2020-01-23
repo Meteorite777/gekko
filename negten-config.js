@@ -33,11 +33,13 @@ config.tradingAdvisor = {
 }
 // EMA settings:
 config.NegTen = {
-  //Lookback time period in hrs
+  //Lookback time period in hrs to compare
   lookbackhours: 24,
   //Max drop threshold to buy during lookback-window
+  //Keep this number positive and as a percent (use decimal places).
   percentagedrop: 0.10,
   //Trailing stoploss percentage
+  //Keep this number positive and as a percent (use decimal places).
   stoplossPercent: 0.02
 };
 
