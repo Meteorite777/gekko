@@ -136,23 +136,6 @@ method.check = function(candle) {
             }
           }else{
 
-            //The candle close was below the current rising FAST EMA. Try to buy at SLOW.
-            buyThreshold = deltaCloseAboveEMA * candleListTail.thisSlowEMA;
-            //Make sure current price (close price) is above the SLOW
-            if(candle.close >= candleListTail.thisSlowEMA){
-              //Check if close price in BUY ZONE: Buy at or near flat/rising SLOW, sell just below FAST before it turns down.
-              if(candle.close < candleListTail.thisSlowEMA + buyThreshold){ //&& (candle.low <= candle.close + buyThreshold && candle.low >= candleListTail.emaFast)){ //This was for checking tail value
-                //We expect the price to bounce off of SLOW and into FAST.
-                setStopLoss(candle);
-                console.log('^^^ BOUNCING LONG ENTERED @ ' + candle.close);
-                this.advice('long');
-                this.state = 'SELL_AT_FAST';
-                tradeStats.bouncingLong+= 1;
-              }
-              else{
-                // Price below Fast and above SLOW but not in buy zone. Wait...
-              }
-            }
           }
         }else{
           //FAST is rising but not above 200. Do nothing?..
@@ -167,6 +150,24 @@ method.check = function(candle) {
           this.advice('long');
           this.state = 'SELL_AT_FAST';
           tradeStats.fallingLong+= 1;
+        }
+
+        //The candle close was below the current FAST EMA. Try to buy at SLOW.
+        buyThreshold = deltaCloseAboveEMA * candleListTail.thisSlowEMA;
+        //Make sure current price (close price) is above the SLOW
+        if(candle.close >= candleListTail.thisSlowEMA){
+          //Check if close price in BUY ZONE: Buy at or near flat/rising SLOW, sell just below FAST before it turns down.
+          if(candle.close < candleListTail.thisSlowEMA + buyThreshold){ //&& (candle.low <= candle.close + buyThreshold && candle.low >= candleListTail.emaFast)){ //This was for checking tail value
+            //We expect the price to bounce off of SLOW and into FAST.
+            setStopLoss(candle);
+            console.log('^^^ BOUNCING LONG ENTERED @ ' + candle.close);
+            this.advice('long');
+            this.state = 'SELL_AT_FAST';
+            tradeStats.bouncingLong+= 1;
+          }
+          else{
+            // Price below Fast and above SLOW but not in buy zone. Wait...
+          }
         }
       }
       break;
