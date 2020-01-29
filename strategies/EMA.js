@@ -33,6 +33,9 @@ strat.check = function(candle) {
   // your code!
   const emaFast = this.tulipIndicators.emaFast.result.result;
   const emaSlow = this.tulipIndicators.emaSlow.result.result;
+  console.log("EMAFAST: " + emaFast);
+  console.log("EMASLOW: " + emaSlow);
+
 
   if(emaFast > emaSlow){
     this.advice('long');

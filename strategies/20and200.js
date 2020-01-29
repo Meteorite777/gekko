@@ -9,6 +9,7 @@ var currentNumberOfCandles = 0;
 
 var stopLoss;
 
+var tradeStats;
 //Wake counter
 var checkCalls = 0;
 
@@ -38,12 +39,22 @@ class LinkedListNode{
   }
 }
 
-
+class TradeStats{
+  constructor(){
+    //Trade Counters
+    var risingLong = 0;
+    var bouncingLong = 0;
+    var fallingLong = 0;
+    var stopouts = 0;
+    var takeProfits = 0;
+  }
+}
 
 // Prepare everything our method needs
 method.init = function() {
   this.state = 'WARMING_UP';
   this.candleList = null;
+
 
   checkTime = this.settings.checkTime;
   candleLength = this.settings.candleLength;
@@ -62,7 +73,12 @@ method.init = function() {
     optInTimePeriod: (200 * (candleLength / checkTime))
   });
 
-
+  tradeStats = new TradeStats();
+  tradeStats.risingLong = 0;
+  tradeStats.bouncingLong = 0;
+  tradeStats.fallingLong = 0;
+  tradeStats.stopouts = 0;
+  tradeStats.takeProfits = 0;
 }
 // What happens on every new candle?
 method.update = function(candle) {
@@ -89,71 +105,100 @@ method.check = function(candle) {
     case 'READY_TO_BUY':
       //Check if real candle or check candle.
       if(checkCalls % (candleLength /checkTime) == 0){
-        //this is a long candle.
+        //this is a long candle. Continue on through execution.
+        console.log(candle.start.format()); //Print Date
       }else{
         //This is a short check candle.
         //TODO call another method.
         return;
       }
-
       //Decide rising or falling 20
       if(emaDirection("FAST") >= 0){
-        //EMA is going up.
-        //Check if current price (close price) is above or below the fast
-        var buyThreshold; //The distance above fast EMA to buy up to.
-        buyThreshold = deltaCloseAboveEMA * candleListTail.thisFastEMA;
+        //FAST EMA is going up.
+        var buyThreshold; //The wiggle room above EMA to buy at. Calculated as: EMA * percentage
+        //Make sure rising FAST is above SLOW ("Picture of Power")
+        if(candleListTail.thisFastEMA > candleListTail.thisSlowEMA){
+          //Check if current price (close price) is above or below the FAST to determine whether we buy at FAST or SLOW.
+          if(candle.close >= candleListTail.thisFastEMA){
+            //The candle close was above the current FAST EMA Try to buy at FAST.
+            buyThreshold = deltaCloseAboveEMA * candleListTail.thisFastEMA;
+            //Check if close price in BUY ZONE: Buy at or near rising FAST, try to sell far above rising FAST
+            if(candle.close < candleListTail.thisFastEMA + buyThreshold){ //&& (candle.low <= candle.close + buyThreshold && candle.low >= candleListTail.emaFast)){ //This was for checking tail value
+              //We expect the price to explode upward.
+              setStopLoss(candle);
+              console.log('^^^ RISING LONG ENTERED @ ' + candle.close);
+              this.advice('long');
+              this.state = 'SELL_ABOVE_FAST';
+              tradeStats.risingLong+= 1;
+            }
+            else{
+              // Price above FAST but not in buy zone. Wait...
+            }
+          }else{
 
-        if((candle.close > candleListTail.thisFastEMA && candle.close < candleListTail.thisFastEMA + buyThreshold)
-            && (candleListTail.thisFastEMA > candleListTail.thisSlowEMA)){
-            //&& (candle.low <= candle.close + buyThreshold && candle.low >= candleListTail.emaFast)){ //This was for checking tail value
-          //The price is above the 20 (fast) EMA
-          //Check if close is near the fast.
-          var upperPrice = 1 + deltaCloseAboveEMA;
-          upperPrice *= candle.close;
-          setStopLoss(candle);
-          console.log('LONG ENTERED @ ' + candle.close);
-          this.advice('long');
-          this.state = 'SELL_ABOVE_FAST';
+            //The candle close was below the current rising FAST EMA. Try to buy at SLOW.
+            buyThreshold = deltaCloseAboveEMA * candleListTail.thisSlowEMA;
+            //Make sure current price (close price) is above the SLOW
+            if(candle.close >= candleListTail.thisSlowEMA){
+              //Check if close price in BUY ZONE: Buy at or near flat/rising SLOW, sell just below FAST before it turns down.
+              if(candle.close < candleListTail.thisSlowEMA + buyThreshold){ //&& (candle.low <= candle.close + buyThreshold && candle.low >= candleListTail.emaFast)){ //This was for checking tail value
+                //We expect the price to bounce off of SLOW and into FAST.
+                setStopLoss(candle);
+                console.log('^^^ BOUNCING LONG ENTERED @ ' + candle.close);
+                this.advice('long');
+                this.state = 'SELL_AT_FAST';
+                tradeStats.bouncingLong+= 1;
+              }
+              else{
+                // Price below Fast and above SLOW but not in buy zone. Wait...
+              }
+            }
+          }
         }else{
-          //The candle close was below the current fast EMA
-          //TODO buy at SLOW, sell under FAST
+          //FAST is rising but not above 200. Do nothing?..
         }
       }else{
-        //EMA is going down.
+        //FAST EMA is going down.
+        //Buy far away from falling FAST, sell @ falling FAST
         if(candle.close < candleListTail.thisFastEMA - (candleListTail.thisFastEMA * deltaFarBelowEMA)){
-          //We expect the price to whip upward (snapback)
+          //We expect the price to whip upward into FAST (snapback)
           setStopLoss(candle);
-          console.log('LONG ENTERED @ ' + candle.close);
+          console.log('^^^ FALLING LONG ENTERED @ ' + candle.close);
           this.advice('long');
           this.state = 'SELL_AT_FAST';
+          tradeStats.fallingLong+= 1;
         }
       }
       break;
       case 'SELL_ABOVE_FAST':
         //stopLoss += 0.015;
-        console.log('SELL HIGH @ PLZ: ' + (candleListTail.thisFastEMA + (candleListTail.thisFastEMA * deltaFarAboveEMA)) );
+        console.log('SELL HIGH PLZ @ ' + (candleListTail.thisFastEMA + (candleListTail.thisFastEMA * deltaFarAboveEMA)) );
         console.log('STOP LOSS: ' + stopLoss);
         if(candle.close < stopLoss){
-          console.log('Stoploss triggered, stoploss: ' + stopLoss);
+          console.log('--- Stoploss triggered, stoploss: ' + stopLoss);
           this.advice('short');
           this.state = 'READY_TO_BUY';
+          tradeStats.stopouts+= 1;
         }
         else if (candle.close >= (candleListTail.thisFastEMA + (candleListTail.thisFastEMA * deltaFarAboveEMA))) {
-          console.log('Sold at target above fast @ ' + (candleListTail.thisFastEMA + (candleListTail.thisFastEMA * deltaFarAboveEMA)));
+          console.log('+++ Sold at target above fast. Close price: ' + (candleListTail.thisFastEMA + (candleListTail.thisFastEMA * deltaFarAboveEMA)));
           this.advice('short');
           this.state = 'READY_TO_BUY';
+          tradeStats.takeProfits+= 1;
         }
         break;
       case 'SELL_AT_FAST':
       //stopLoss += 0.015;
       if(candle.close < stopLoss){
-        console.log('Stoploss triggered, stoploss: ' + stopLoss);
+        console.log('--- Stoploss triggered , stoploss: ' + stopLoss);
         this.advice('short');
         this.state = 'READY_TO_BUY';
+        tradeStats.stopouts+= 1;
       }else if(candle.close > (candleListTail.thisFastEMA - deltaCloseBelowEMA * candleListTail.thisFastEMA)){
-        console.log('Selling at fast. Close price: ' + candle.close);
+        console.log('+++ Selling at fast. Close price: ' + candle.close);
         this.advice('short');
         this.state = 'READY_TO_BUY';
+        tradeStats.takeProfits+= 1;
       }
       break;
   }
@@ -161,6 +206,7 @@ method.check = function(candle) {
 
 method.end = function(){
   //printStoredCandles();
+  console.log(tradeStats);
 }
 
 function setStopLoss(candle){
