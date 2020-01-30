@@ -16,9 +16,9 @@ config.debug = true; // for additional logging / debugging
 config.watch = {
 
   // see https://gekko.wizb.it/docs/introduction/supported_exchanges.html
-  exchange: 'poloniex',
+  exchange: 'binance',
   currency: 'USDT',
-  asset: 'BTC',
+  asset: 'BCHABC',
 
   // You can set your own tickrate (refresh rate).
   // If you don't set it, the defaults are 2 sec for
@@ -42,13 +42,13 @@ config.GA = {
   checkTime: 15,
   candleLength: 240,
 
-  deltaCloseBelowEMA: 0.14011011701279408,
-  deltaCloseAboveEMA: 0.07,
+  deltaCloseBelowEMA: 0.02667793898517757,
+  deltaCloseAboveEMA: 0.01,
 
-  deltaFarBelowEMA: 0.07,
-  deltaFarAboveEMA: 0.07,
+  deltaFarBelowEMA: 0.01,
+  deltaFarAboveEMA: 0.01,
 
-  stopLossPercent: 0.3,
+  stopLossPercent: 0.03429104380149451,
 
 };
 
@@ -68,7 +68,7 @@ config.paperTrader = {
   simulationBalance: {
     // these are in the unit types configured in the watcher.
     asset: 0,
-    currency: 1000,
+    currency: 100,
   },
   // how much fee in % does each trade cost?
   feeMaker: 0.075,
@@ -345,8 +345,8 @@ config.importer = {
     // NOTE: these dates are in UTC
     //THESEDATES
     //from: "2019-11-19 00:00:00",
-    from: "2019-11-30 00:00:00",
-    to: "2019-12-30 00:00:00"
+    from: "2019-10-21 06:07",
+    to: "2019-11-28 01:58"
   }
 }
 

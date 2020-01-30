@@ -11,10 +11,10 @@ public class Individual {
 	
 	public double fitness = Double.MIN_VALUE;
 	
-	private String gekkoCD = "cd /home/osboxes/Documents/Gekko/gekko && ";
+	private String gekkoCD = "cd /home/gekko/Repos/gekko && ";
 	private String gekkoArgs = "node gekko --backtest --config " + "ga-config.js";
-	private String configTemplate = "/home/osboxes/Documents/Gekko/gekko/ga-config-template.js";
-	private String configTarget = "/home/osboxes/Documents/Gekko/gekko/ga-config.js";
+	private String configTemplate = "/home/gekko/Repos/gekko/ga-config-template.js";
+	private String configTarget = "/home/gekko/Repos/gekko/ga-config.js";
 	
 	public String terminal = "Not ran.";
 	
@@ -24,10 +24,25 @@ public class Individual {
 	public double stopLossPercentageMutation = 0.01;
 	
 	public double deltaCloseBelowEMA;
-	public double deltaCloseBelowEMAMax = 0.25;
+	public double deltaCloseBelowEMAMax = 0.15;
 	public double deltaCloseBelowEMAMin = 0.01;
 	public double deltaCloseBelowEMAMutation = 0.01;
 	
+	
+	public double deltaCloseAboveEMA;
+	public double deltaCloseAboveEMAMax = 0.15;
+	public double deltaCloseAboveEMAMin = 0.01;
+	public double deltaCloseAboveEMAMutation = 0.01;
+	
+	public double deltaFarAboveEMA;
+	public double deltaFarAboveEMAMax = 0.15;
+	public double deltaFarAboveEMAMin = 0.01;
+	public double deltaFarAboveEMAMutation = 0.01;
+	
+	public double deltaFarBelowEMA;
+	public double deltaFarBelowEMAMax = 0.15;
+	public double deltaFarBelowEMAMin = 0.01;
+	public double deltaFarBelowEMAMutation = 0.01;
 	
 	public Individual() {
 		
@@ -61,18 +76,26 @@ public class Individual {
 			process.waitFor();
 			
 		}catch(Exception e) {
-			sb.append(e.toString());
+			System.out.println(e.toString());
+			fitness = -100000000.0;
+			return fitness;
 		}
 		
 		//Find value from output.
 		terminal = sb.toString();
 		
-		String tmp = terminal.substring(terminal.indexOf("(PROFIT REPORT) profit:"));
-		tmp = tmp.substring("(PROFIT REPORT) profit:".length());
-		tmp = tmp.substring(0, tmp.indexOf("USDT"));
-		tmp = tmp.trim();
-		
-		fitness = Double.parseDouble(tmp);
+		try {
+			String tmp = terminal.substring(terminal.indexOf("(PROFIT REPORT) profit:"));
+			tmp = tmp.substring("(PROFIT REPORT) profit:".length());
+			tmp = tmp.substring(0, tmp.indexOf("USDT"));
+			tmp = tmp.trim();
+			
+			fitness = Double.parseDouble(tmp);
+		}catch(Exception e) {
+			//System.out.println(e.toString());
+			fitness = -1000000;
+			return fitness;
+		}
 		
 		return fitness;
 	}
@@ -103,23 +126,63 @@ public class Individual {
 			ind1.deltaCloseBelowEMA = other.deltaCloseBelowEMA;
 		}
 		
+		//DeltaCloseAboveEMA
+		if(Math.random() > 0.5) {
+			ind1.deltaCloseAboveEMA = this.deltaCloseAboveEMA;
+			ind2.deltaCloseAboveEMA = other.deltaCloseAboveEMA;
+		}else {
+			ind2.deltaCloseAboveEMA = this.deltaCloseAboveEMA;
+			ind1.deltaCloseAboveEMA = other.deltaCloseAboveEMA;
+		}
+		
+		//DeltaFarAboveEMA
+		if(Math.random() > 0.5) {
+			ind1.deltaFarAboveEMA = this.deltaFarAboveEMA;
+			ind2.deltaFarAboveEMA = other.deltaFarAboveEMA;
+		}else {
+			ind2.deltaFarAboveEMA = this.deltaFarAboveEMA;
+			ind1.deltaFarAboveEMA = other.deltaFarAboveEMA;
+		}
+		
+		//DeltaFarAboveEMA
+		if(Math.random() > 0.5) {
+			ind1.deltaFarBelowEMA = this.deltaFarBelowEMA;
+			ind2.deltaFarBelowEMA = other.deltaFarBelowEMA;
+		}else {
+			ind2.deltaFarBelowEMA = this.deltaFarBelowEMA;
+			ind1.deltaFarBelowEMA = other.deltaFarBelowEMA;
+		}
+		
 		return crossed;
 	}
 	
 	public void randomize() {
 		//random number for stoploss
-		stopLossPercentage = (int) (Math.random() * 10); //int between 
-		stopLossPercentage = stopLossPercentage / 10; // 0.0 - 0.9
+		stopLossPercentage = Math.random();
 		
-		while(stopLossPercentage < 0.1 || stopLossPercentage > 0.9) {
+		while(stopLossPercentage < stopLossPercentageMin || stopLossPercentage > stopLossPercentageMax) {
 			//The random number was not in our range. example: 0.0.
-			stopLossPercentage = (int) (Math.random() * 10); //int between 
-			stopLossPercentage = stopLossPercentage / 10; // 0.0 - 0.9
+			stopLossPercentage = Math.random();
 		}
 		
 		deltaCloseBelowEMA = Math.random();
 		while(deltaCloseBelowEMA > deltaCloseBelowEMAMax || deltaCloseBelowEMA < deltaCloseBelowEMAMin) {
 			deltaCloseBelowEMA = Math.random();
+		}
+		
+		deltaCloseAboveEMA = Math.random();
+		while(deltaCloseAboveEMA > deltaCloseAboveEMAMax || deltaCloseAboveEMA < deltaCloseAboveEMAMin) {
+			deltaCloseAboveEMA = Math.random();
+		}
+		
+		deltaFarAboveEMA = Math.random();
+		while(deltaFarAboveEMA > deltaFarAboveEMAMax || deltaFarAboveEMA < deltaFarAboveEMAMin) {
+			deltaFarAboveEMA = Math.random();
+		}
+		
+		deltaFarBelowEMA = Math.random();
+		while(deltaFarBelowEMA > deltaFarBelowEMAMax || deltaFarBelowEMA < deltaFarBelowEMAMin) {
+			deltaFarBelowEMA = Math.random();
 		}
 	}
 	
@@ -149,6 +212,9 @@ public class Individual {
 		
 		str = str.replace("#stopLossPercent#", stopLossPercentage + "");
 		str = str.replace("#deltaCloseBelowEMA#", deltaCloseBelowEMA + "");
+		str = str.replace("#deltaCloseAboveEMA#", deltaCloseAboveEMA + "");
+		str = str.replace("#deltaFarBelowEMA#", deltaFarBelowEMA + "");
+		str = str.replace("#deltaFarAboveEMA#", deltaFarAboveEMA + "");
 		
 		try {
 			PrintWriter out = new PrintWriter(new FileOutputStream(configTarget, false));
@@ -168,6 +234,10 @@ public class Individual {
 		}else {
 			ret = "Fitness: $" + fitness;
 		}
-		return ", Stoploss: " + stopLossPercentage + ", DeltaCloseBelowEMA: " + deltaCloseBelowEMA;
+		return ret + ", Stoploss: " + stopLossPercentage 
+				+ ", DeltaCloseBelowEMA: " + deltaCloseBelowEMA 
+				+ " DeltaCloseAboveEMA: " + deltaCloseAboveEMA
+				+ " DeltaFarAboveEMA: " + deltaFarAboveEMA
+				+ " DeltaFarBelowEMA: " + deltaFarBelowEMA;
 	}
 }

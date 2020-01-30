@@ -2,9 +2,9 @@ import java.util.LinkedList;
 
 public class Main {
 	
-	int populationSize = 12;
-	int numberOfGenerations = 3;
-	double mutationRate = 0.05;
+	int populationSize = 16;
+	int numberOfGenerations = 33;
+	double mutationRate = 0.50;
 	
 	LinkedList<Individual> population;
 	Individual bestIndividual = null;
@@ -14,7 +14,7 @@ public class Main {
 		initializePopulation();
 		
 		for(int i = 1; i <= numberOfGenerations; i++) {
-			System.out.println("Generation #" + i);
+			System.out.println("Generation #" + i + " Size: " + population.size());
 			selection();
 			mutation();
 			for(Individual in : population) {
@@ -22,12 +22,19 @@ public class Main {
 			}
 		}
 		
+		for(Individual i : population) {
+			i.getFitness();
+		}
+		
+		setBestIndividual();
+		
 		System.out.println("\n\nBest: " + bestIndividual.toString());
 		
 		System.out.println("\nOTHERS:");
 		for(Individual i : population) {
 			System.out.println(i);
 		}
+		System.out.println("-------------------------------------------------------");
 	}
 	
 	private void initializePopulation() {
@@ -46,7 +53,7 @@ public class Main {
 		setBestIndividual();
 		nextPopulation.add(bestIndividual);
 		
-		for(int i = 0; i < populationSize / 2 - 1; i++) {
+		for(int i = 0; i < populationSize / 4 - 1; i++) {
 			//Select 2 random individuals
 			Individual ind1 = population.remove((int) Math.random() * population.size());
 			Individual ind2 = population.remove((int) Math.random() * population.size());
@@ -77,6 +84,9 @@ public class Main {
 	}
 	
 	private void mutation() {
+		
+		LinkedList<Individual> additions = new LinkedList<Individual>();
+		
 		for(Individual ind : population) {
 			if(Math.random() < mutationRate) {
 				//Mutate.
@@ -89,16 +99,42 @@ public class Main {
 					indMutant.stopLossPercentage += indMutant.stopLossPercentageMutation;
 				}else {
 					indMutant.stopLossPercentage -= indMutant.stopLossPercentageMutation;
+					indMutant.stopLossPercentage = Math.max(indMutant.stopLossPercentageMin, indMutant.stopLossPercentage);
 				}
 				
 				if(Math.random() > 0.5) {
 					indMutant.deltaCloseBelowEMA += indMutant.deltaCloseBelowEMAMutation;
 				}else {
 					indMutant.deltaCloseBelowEMA -= indMutant.deltaCloseBelowEMAMutation;
+					indMutant.deltaCloseBelowEMA = Math.max(indMutant.deltaCloseBelowEMAMin, indMutant.deltaCloseBelowEMA);
 				}
-				population.add(indMutant);
+				
+				if(Math.random() > 0.5) {
+					indMutant.deltaCloseAboveEMA += indMutant.deltaCloseAboveEMAMutation;
+				}else {
+					indMutant.deltaCloseAboveEMA -= indMutant.deltaCloseAboveEMAMutation;
+					indMutant.deltaCloseAboveEMA = Math.max(indMutant.deltaCloseAboveEMAMin, indMutant.deltaCloseAboveEMA);
+				}
+				
+				if(Math.random() > 0.5) {
+					indMutant.deltaFarAboveEMA += indMutant.deltaFarAboveEMAMutation;
+				}else {
+					indMutant.deltaFarAboveEMA -= indMutant.deltaFarAboveEMAMutation;
+					indMutant.deltaFarAboveEMA = Math.max(indMutant.deltaFarAboveEMAMin, indMutant.deltaFarAboveEMA);
+				}
+				
+				if(Math.random() > 0.5) {
+					indMutant.deltaFarBelowEMA += indMutant.deltaFarBelowEMAMutation;
+				}else {
+					indMutant.deltaFarBelowEMA -= indMutant.deltaFarBelowEMAMutation;
+					indMutant.deltaFarBelowEMA = Math.max(indMutant.deltaFarBelowEMAMin, indMutant.deltaFarBelowEMA);
+				}
+				
+				additions.add(indMutant);
 			}
 		}
+		
+		population.addAll(additions);
 	}
 	
 	private void setBestIndividual() {
