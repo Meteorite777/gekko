@@ -1,10 +1,14 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 
 public class Main {
 	
-	int populationSize = 16;
+	int populationSize = 22;
 	int numberOfGenerations = 33;
-	double mutationRate = 0.50;
+	
+	double mutationRate = 0.90;
 	
 	LinkedList<Individual> population;
 	Individual bestIndividual = null;
@@ -13,10 +17,12 @@ public class Main {
 	Main(){
 		initializePopulation();
 		
+		//Main loop
 		for(int i = 1; i <= numberOfGenerations; i++) {
-			System.out.println("Generation #" + i + " Size: " + population.size());
+			System.out.println("->\n-> Generation #" + i + " Size: " + population.size());
 			selection();
 			mutation();
+			removeNullTrades();
 			for(Individual in : population) {
 				System.out.println(in);
 			}
@@ -35,12 +41,60 @@ public class Main {
 			System.out.println(i);
 		}
 		System.out.println("-------------------------------------------------------");
+		
+		exportBest();
+		
 	}
 	
+	private void exportBest() {	
+		
+		bestIndividual.writeConfigFile();
+		
+		try {
+			PrintWriter out = new PrintWriter(new FileOutputStream("/home/osboxes/Documents/Gekko/gekko/best_run.txt", false));
+			out.print(bestIndividual.terminal);
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	private void mutation() {
+		LinkedList<Individual> mutatants = new LinkedList<Individual>();
+		
+		for(Individual ind : population) {
+			if(Math.random() < mutationRate) {
+				mutatants.add(ind.mutate());
+			}
+		}
+		
+	}
+
 	private void initializePopulation() {
 		population = new LinkedList<Individual>();
 		
 		for(int i = 0; i < populationSize; i++) {
+			Individual ind = new Individual();
+			ind.randomize();
+			population.add(ind);
+		}
+	}
+	
+	private void removeNullTrades() {
+		LinkedList<Individual> remove = new LinkedList<Individual>();
+		
+		for(Individual ind : population) {
+			if(ind.fitness == Double.MIN_VALUE + 1) {
+				remove.add(ind);
+			}
+		}
+		
+		population.removeAll(remove);
+		
+		//If the population became small. Add new random individuals.
+		
+		for(int i = population.size(); i < populationSize; i++) {
 			Individual ind = new Individual();
 			ind.randomize();
 			population.add(ind);
@@ -52,6 +106,11 @@ public class Main {
 		
 		setBestIndividual();
 		nextPopulation.add(bestIndividual);
+		
+		if(populationSize / 4 - 1 <= 0) {
+			System.err.print("The population size is too small");
+			System.exit(-1);
+		}
 		
 		for(int i = 0; i < populationSize / 4 - 1; i++) {
 			//Select 2 random individuals
@@ -83,59 +142,7 @@ public class Main {
 		population = nextPopulation;
 	}
 	
-	private void mutation() {
-		
-		LinkedList<Individual> additions = new LinkedList<Individual>();
-		
-		for(Individual ind : population) {
-			if(Math.random() < mutationRate) {
-				//Mutate.
-				Individual indMutant = new Individual();
-				
-				indMutant.stopLossPercentage = ind.stopLossPercentage;
-				indMutant.deltaCloseBelowEMA = ind.deltaCloseBelowEMA;
-				
-				if(Math.random() > 0.5) {
-					indMutant.stopLossPercentage += indMutant.stopLossPercentageMutation;
-				}else {
-					indMutant.stopLossPercentage -= indMutant.stopLossPercentageMutation;
-					indMutant.stopLossPercentage = Math.max(indMutant.stopLossPercentageMin, indMutant.stopLossPercentage);
-				}
-				
-				if(Math.random() > 0.5) {
-					indMutant.deltaCloseBelowEMA += indMutant.deltaCloseBelowEMAMutation;
-				}else {
-					indMutant.deltaCloseBelowEMA -= indMutant.deltaCloseBelowEMAMutation;
-					indMutant.deltaCloseBelowEMA = Math.max(indMutant.deltaCloseBelowEMAMin, indMutant.deltaCloseBelowEMA);
-				}
-				
-				if(Math.random() > 0.5) {
-					indMutant.deltaCloseAboveEMA += indMutant.deltaCloseAboveEMAMutation;
-				}else {
-					indMutant.deltaCloseAboveEMA -= indMutant.deltaCloseAboveEMAMutation;
-					indMutant.deltaCloseAboveEMA = Math.max(indMutant.deltaCloseAboveEMAMin, indMutant.deltaCloseAboveEMA);
-				}
-				
-				if(Math.random() > 0.5) {
-					indMutant.deltaFarAboveEMA += indMutant.deltaFarAboveEMAMutation;
-				}else {
-					indMutant.deltaFarAboveEMA -= indMutant.deltaFarAboveEMAMutation;
-					indMutant.deltaFarAboveEMA = Math.max(indMutant.deltaFarAboveEMAMin, indMutant.deltaFarAboveEMA);
-				}
-				
-				if(Math.random() > 0.5) {
-					indMutant.deltaFarBelowEMA += indMutant.deltaFarBelowEMAMutation;
-				}else {
-					indMutant.deltaFarBelowEMA -= indMutant.deltaFarBelowEMAMutation;
-					indMutant.deltaFarBelowEMA = Math.max(indMutant.deltaFarBelowEMAMin, indMutant.deltaFarBelowEMA);
-				}
-				
-				additions.add(indMutant);
-			}
-		}
-		
-		population.addAll(additions);
-	}
+	
 	
 	private void setBestIndividual() {
 		for(Individual ind : population) {

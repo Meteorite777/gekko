@@ -11,37 +11,54 @@ public class Individual {
 	
 	public double fitness = Double.MIN_VALUE;
 	
-	private String gekkoCD = "cd /home/gekko/Repos/gekko && ";
+	/*
+	//NF's
+	private String gekkoCD = "cd /home/osboxes/Documents/Gekko/gekko && ";
 	private String gekkoArgs = "node gekko --backtest --config " + "ga-config.js";
-	private String configTemplate = "/home/gekko/Repos/gekko/ga-config-template.js";
-	private String configTarget = "/home/gekko/Repos/gekko/ga-config.js";
+	private String configTemplate = "/home/osboxes/Documents/Gekko/gekko/ga-config-template.js";
+	private String configTarget = "/home/osboxes/Documents/Gekko/gekko/ga-config.js";
+	*/
+	
+	//SM's
+	private String gekkoCD = "cd /home/osboxes/Documents/Gekko/gekko && ";
+	private String gekkoArgs = "node gekko --backtest --config " + "ga-config.js";
+	private String configTemplate = "/home/osboxes/Documents/Gekko/gekko/ga-config-template.js";
+	private String configTarget = "/home/osboxes/Documents/Gekko/gekko/ga-config.js";
 	
 	public String terminal = "Not ran.";
+	
+	//Minutes
+	public int checkTime;
+	private int [] checkTimes = {5, 10, 15, 20, 30}; 
+	
+	//Minutes
+	public int candleLength;
+	private int[] candleLengths = {30, 60, 90, 120, 180, 240, 300, 360};
 	
 	public double stopLossPercentage;
 	public double stopLossPercentageMax = 0.09;
 	public double stopLossPercentageMin = 0.01;
-	public double stopLossPercentageMutation = 0.01;
+	public double stopLossPercentageMutation = 0.005;
 	
 	public double deltaCloseBelowEMA;
 	public double deltaCloseBelowEMAMax = 0.15;
-	public double deltaCloseBelowEMAMin = 0.01;
-	public double deltaCloseBelowEMAMutation = 0.01;
+	public double deltaCloseBelowEMAMin = 0.005;
+	public double deltaCloseBelowEMAMutation = 0.005;
 	
 	
 	public double deltaCloseAboveEMA;
 	public double deltaCloseAboveEMAMax = 0.15;
-	public double deltaCloseAboveEMAMin = 0.01;
-	public double deltaCloseAboveEMAMutation = 0.01;
+	public double deltaCloseAboveEMAMin = 0.005;
+	public double deltaCloseAboveEMAMutation = 0.005;
 	
 	public double deltaFarAboveEMA;
 	public double deltaFarAboveEMAMax = 0.15;
-	public double deltaFarAboveEMAMin = 0.01;
+	public double deltaFarAboveEMAMin = 0.05;
 	public double deltaFarAboveEMAMutation = 0.01;
 	
 	public double deltaFarBelowEMA;
 	public double deltaFarBelowEMAMax = 0.15;
-	public double deltaFarBelowEMAMin = 0.01;
+	public double deltaFarBelowEMAMin = 0.05;
 	public double deltaFarBelowEMAMutation = 0.01;
 	
 	public Individual() {
@@ -77,7 +94,7 @@ public class Individual {
 			
 		}catch(Exception e) {
 			System.out.println(e.toString());
-			fitness = -100000000.0;
+			fitness = Double.MIN_VALUE + 1; //Error Value
 			return fitness;
 		}
 		
@@ -93,7 +110,7 @@ public class Individual {
 			fitness = Double.parseDouble(tmp);
 		}catch(Exception e) {
 			//System.out.println(e.toString());
-			fitness = -1000000;
+			fitness = Double.MIN_VALUE + 1;  //Error value
 			return fitness;
 		}
 		
@@ -156,10 +173,73 @@ public class Individual {
 		return crossed;
 	}
 	
+	/**
+	 * mutate() will return a newly created individual that has been mutated.
+	 */
+	public Individual mutate() {
+		
+
+		Individual indMutant = new Individual();
+		
+		if(Math.random() > 0.3) {
+			//Change check time
+			indMutant.checkTime = checkTimes[(int) (Math.random() * checkTimes.length)];
+			
+		}
+		
+		if(Math.random() > 0.3) {
+			//Change our candle length
+			candleLength = candleLengths[(int) (Math.random() * candleLengths.length)];
+		}
+		
+		if(Math.random() > 0.3) {
+			if(Math.random() > 0.5) {
+				indMutant.stopLossPercentage += indMutant.stopLossPercentageMutation;
+			}else {
+				indMutant.stopLossPercentage -= indMutant.stopLossPercentageMutation;
+				indMutant.stopLossPercentage = Math.max(indMutant.stopLossPercentageMin, indMutant.stopLossPercentage);
+			}
+		}
+		
+		if(Math.random() > 0.3) {
+			if(Math.random() > 0.5) {
+				indMutant.deltaCloseBelowEMA += indMutant.deltaCloseBelowEMAMutation;
+			}else {
+				indMutant.deltaCloseBelowEMA -= indMutant.deltaCloseBelowEMAMutation;
+				indMutant.deltaCloseBelowEMA = Math.max(indMutant.deltaCloseBelowEMAMin, indMutant.deltaCloseBelowEMA);
+			}
+		}
+		
+		if(Math.random() > 0.3) {
+			if(Math.random() > 0.5) {
+				indMutant.deltaFarAboveEMA += indMutant.deltaFarAboveEMAMutation;
+			}else {
+				indMutant.deltaFarAboveEMA -= indMutant.deltaFarAboveEMAMutation;
+				indMutant.deltaFarAboveEMA = Math.max(indMutant.deltaFarAboveEMAMin, indMutant.deltaFarAboveEMA);
+			}
+		}
+		
+		if(Math.random() > 0.3) {
+			if(Math.random() > 0.5) {
+				indMutant.deltaFarBelowEMA += indMutant.deltaFarBelowEMAMutation;
+			}else {
+				indMutant.deltaFarBelowEMA -= indMutant.deltaFarBelowEMAMutation;
+				indMutant.deltaFarBelowEMA = Math.max(indMutant.deltaFarBelowEMAMin, indMutant.deltaFarBelowEMA);
+			}
+		}
+		
+		
+		return indMutant;
+	}
+	
 	public void randomize() {
+		
+		//Choose random candle size and check times.
+		checkTime = checkTimes[(int) (Math.random() * checkTimes.length)];
+		candleLength = candleLengths[(int) (Math.random() * candleLengths.length)];
+		
 		//random number for stoploss
 		stopLossPercentage = Math.random();
-		
 		while(stopLossPercentage < stopLossPercentageMin || stopLossPercentage > stopLossPercentageMax) {
 			//The random number was not in our range. example: 0.0.
 			stopLossPercentage = Math.random();
@@ -206,9 +286,14 @@ public class Individual {
 	    return contentBuilder.toString();
 	}
 	
-	private void writeConfigFile() {
+	public void writeConfigFile() {
 		String str;
 		str = readConfigFile();
+		
+		str = str.replace("#checkTime#", checkTime + ""); //Replace in config.TradingAdvisor{}
+		str = str.replace("#checkTime#", checkTime + ""); //Replace in config.20and200{}
+		
+		str = str.replace("#candleLength#", candleLength + "");
 		
 		str = str.replace("#stopLossPercent#", stopLossPercentage + "");
 		str = str.replace("#deltaCloseBelowEMA#", deltaCloseBelowEMA + "");
@@ -230,14 +315,15 @@ public class Individual {
 	public String toString() {
 		String ret = "";
 		if(fitness == Double.MIN_VALUE) {
-			ret = "Fitness not calculated";
+			ret = "Fitness not (yet) calculated";
 		}else {
-			ret = "Fitness: $" + fitness;
+			ret = "Fitness: ($)" + fitness;
 		}
-		return ret + ", Stoploss: " + stopLossPercentage 
-				+ ", DeltaCloseBelowEMA: " + deltaCloseBelowEMA 
-				+ " DeltaCloseAboveEMA: " + deltaCloseAboveEMA
-				+ " DeltaFarAboveEMA: " + deltaFarAboveEMA
-				+ " DeltaFarBelowEMA: " + deltaFarBelowEMA;
+		return ret + "\n\tCheck Time: " + checkTime + ", CandleLength: " + candleLength 
+				+ "\n\t Stoploss: " + stopLossPercentage 
+				+ "\n\t DeltaCloseBelowEMA: " + deltaCloseBelowEMA 
+				+ "\n\t DeltaCloseAboveEMA: " + deltaCloseAboveEMA
+				+ "\n\t DeltaFarAboveEMA: " + deltaFarAboveEMA
+				+ "\n\t DeltaFarBelowEMA: " + deltaFarBelowEMA;
 	}
 }
