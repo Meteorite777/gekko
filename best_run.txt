@@ -1,0 +1,145 @@
+
+    ______   ________  __    __  __    __   ______
+   /      \ /        |/  |  /  |/  |  /  | /      \
+  /$$$$$$  |$$$$$$$$/ $$ | /$$/ $$ | /$$/ /$$$$$$  |
+  $$ | _$$/ $$ |__    $$ |/$$/  $$ |/$$/  $$ |  $$ |
+  $$ |/    |$$    |   $$  $$<   $$  $$<   $$ |  $$ |
+  $$ |$$$$ |$$$$$/    $$$$$  \  $$$$$  \  $$ |  $$ |
+  $$ \__$$ |$$ |_____ $$ |$$  \ $$ |$$  \ $$ \__$$ |
+  $$    $$/ $$       |$$ | $$  |$$ | $$  |$$    $$/ 
+   $$$$$$/  $$$$$$$$/ $$/   $$/ $$/   $$/  $$$$$$/
+
+	Gekko v0.6.8
+	I'm gonna make you rich, Bud Fox. 
+
+
+2020-02-11 00:28:39 (INFO):	Setting up Gekko in backtest mode
+2020-02-11 00:28:39 (INFO):	
+2020-02-11 00:28:39 (INFO):	Setting up:
+2020-02-11 00:28:39 (INFO):		 Trading Advisor
+2020-02-11 00:28:39 (INFO):		 Calculate trading advice
+2020-02-11 00:28:40 (INFO):		 Using the strategy: GA
+2020-02-11 00:28:40 (INFO):	
+
+2020-02-11 00:28:40 (INFO):	Setting up:
+2020-02-11 00:28:40 (INFO):		 Paper Trader
+2020-02-11 00:28:40 (INFO):		 Paper trader that simulates fake trades.
+2020-02-11 00:28:40 (INFO):	
+
+2020-02-11 00:28:40 (INFO):	Setting up:
+2020-02-11 00:28:40 (INFO):		 Performance Analyzer
+2020-02-11 00:28:40 (INFO):		 Analyzes performances of trades
+2020-02-11 00:28:40 (INFO):	
+
+2020-02-11 00:28:40 (INFO):	Scanning local history for backtestable dateranges.
+2020-02-11 00:28:40 (DEBUG):	Available 135432
+2020-02-11 00:28:40 (DEBUG):	Optimal 135454
+2020-02-11 00:28:40 (INFO):	The database has 23 candles missing, Figuring out which ones...
+2020-02-11 00:28:40 (INFO):	Gekko was able to find a single daterange in the locally stored history:
+2020-02-11 00:28:40 (INFO):		 from: 2019-10-19 18:25:00
+2020-02-11 00:28:40 (INFO):		 to: 2020-01-21 18:25:00
+
+2020-02-11 00:28:40 (INFO):		WARNING: BACKTESTING FEATURE NEEDS PROPER TESTING
+2020-02-11 00:28:40 (INFO):		WARNING: ACT ON THESE NUMBERS AT YOUR OWN RISK!
+
+2019-11-22T00:24:00-06:00
+2019-11-22T04:24:00-06:00
+2019-11-22T08:24:00-06:00
+^^^ FALLING LONG ENTERED @ 6926.6997551
+2020-02-11 00:29:51 (INFO):	2019-11-22 08:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.14426061 BTC
++++ Selling at fast. Close price: 7294.94983647
+2020-02-11 00:29:51 (INFO):	2019-11-22 17:52:00: Paper trader simulated a SELL 	1051.58463289 USDT <= 0.00000000 BTC
+2019-11-22T20:24:00-06:00
+2019-11-23T00:24:00-06:00
+^^^ BOUNCING LONG ENTERED @ 7201.57391096
+2020-02-11 00:29:52 (INFO):	2019-11-23 00:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.14591198 BTC
++++ Selling at fast. Close price: 7198.5
+2020-02-11 00:29:52 (INFO):	2019-11-23 00:26:00: Paper trader simulated a SELL 	1049.55962748 USDT <= 0.00000000 BTC
+2019-11-23T04:24:00-06:00
+2019-11-23T08:24:00-06:00
+2019-11-23T12:24:00-06:00
+^^^ BOUNCING LONG ENTERED @ 7281.48835094
+2020-02-11 00:29:53 (INFO):	2019-11-23 12:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.14403270 BTC
++++ Selling at fast. Close price: 7298.68212702
+2020-02-11 00:29:53 (INFO):	2019-11-23 12:26:00: Paper trader simulated a SELL 	1050.46045652 USDT <= 0.00000000 BTC
+2019-11-23T16:24:00-06:00
+^^^ BOUNCING LONG ENTERED @ 7272.87019599
+2020-02-11 00:29:53 (INFO):	2019-11-23 16:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.14432714 BTC
++++ Selling at fast. Close price: 7273.784455
+2020-02-11 00:29:53 (INFO):	2019-11-23 16:26:00: Paper trader simulated a SELL 	1049.01715398 USDT <= 0.00000000 BTC
+2019-11-23T20:24:00-06:00
+^^^ BOUNCING LONG ENTERED @ 7271.826057
+2020-02-11 00:29:54 (INFO):	2019-11-23 20:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.14414954 BTC
++++ Selling at fast. Close price: 7268.10148868
+2020-02-11 00:29:54 (INFO):	2019-11-23 20:26:00: Paper trader simulated a SELL 	1046.90771615 USDT <= 0.00000000 BTC
+2019-11-24T00:24:00-06:00
+2019-11-24T04:24:00-06:00
+2019-11-24T08:24:00-06:00
+2019-11-24T12:24:00-06:00
+2019-11-24T16:24:00-06:00
+2019-11-24T20:24:00-06:00
+2019-11-25T00:24:00-06:00
+^^^ FALLING LONG ENTERED @ 6596
+2020-02-11 00:29:56 (INFO):	2019-11-25 00:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.15859953 BTC
++++ Selling at fast. Close price: 6888.56143808
+2020-02-11 00:29:57 (INFO):	2019-11-25 05:00:00: Paper trader simulated a SELL 	1091.70321450 USDT <= 0.00000000 BTC
+2019-11-25T08:24:00-06:00
+^^^ BOUNCING LONG ENTERED @ 7181.73868087
+2020-02-11 00:29:57 (INFO):	2019-11-25 08:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.15189698 BTC
++++ Selling at fast. Close price: 7177.14515802
+2020-02-11 00:29:57 (INFO):	2019-11-25 08:26:00: Paper trader simulated a SELL 	1089.36903451 USDT <= 0.00000000 BTC
+2019-11-25T12:24:00-06:00
+2019-11-25T16:24:00-06:00
+2019-11-25T20:24:00-06:00
+^^^ RISING LONG ENTERED @ 7167.79180487
+2020-02-11 00:29:58 (INFO):	2019-11-25 20:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.15186713 BTC
+--- Stoploss triggered, stoploss: 6989.7853510329915
+2020-02-11 00:30:42 (INFO):	2019-12-16 12:59:00: Paper trader simulated a SELL 	1050.94457086 USDT <= 0.00000000 BTC
+2019-12-16T16:24:00-06:00
+2019-12-16T20:24:00-06:00
+2019-12-17T00:24:00-06:00
+2019-12-17T04:24:00-06:00
+2019-12-17T08:24:00-06:00
+2019-12-17T12:24:00-06:00
+2019-12-17T16:24:00-06:00
+2019-12-17T20:24:00-06:00
+2019-12-18T00:24:00-06:00
+2019-12-18T04:24:00-06:00
+2019-12-18T08:24:00-06:00
+2019-12-18T12:24:00-06:00
+^^^ RISING LONG ENTERED @ 6829.941484
+2020-02-11 00:30:46 (INFO):	2019-12-18 12:25:00: Paper trader simulated a BUY 	0.00000000 USDT	=> 0.15375773 BTC
+TradeStats {
+  risingLong: 2,
+  bouncingLong: 5,
+  fallingLong: 2,
+  stopouts: 1,
+  takeProfits: 7 }
+2020-02-11 00:31:58 (INFO):	
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) REPORT:
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) entry date (UTC)  	exit date (UTC)  	exposed duration	P&L 	profit
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-22 14:25	2019-11-22 23:52	9 hours         	52.33	5.24
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-23 06:25	2019-11-23 06:26	a minute        	-1.24	-0.12
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-23 18:25	2019-11-23 18:26	a minute        	1.69	0.16
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-23 22:25	2019-11-23 22:26	a minute        	-0.66	-0.06
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-24 02:25	2019-11-24 02:26	a minute        	-1.32	-0.13
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-25 06:25	2019-11-25 11:00	5 hours         	45.58	4.36
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-25 14:25	2019-11-25 14:26	a minute        	-1.52	-0.14
+2020-02-11 00:31:58 (INFO):	(ROUNDTRIP) 2019-11-26 02:25	2019-12-16 18:59	21 days         	-37.61	-3.45
+2020-02-11 00:31:58 (INFO):	
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) start time:			 2019-10-19 18:25:00
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) end time:			 2020-01-21 18:26:00
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) timespan:			 3 months
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) exposure:			 0.22636505344966423
+2020-02-11 00:31:58 (INFO):	
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) start price:			 7989.39678941 USDT
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) end price:			 8633.09635995 USDT
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) Market:				 8.05692329%
+2020-02-11 00:31:58 (INFO):	
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) amount of trades:		 17
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) original balance:		 1000.00000000 USDT
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) current balance:		 1327.40529918 USDT
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) profit:				 327.40529918 USDT (32.74052992%)
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) simulated yearly profit:	 1272.143048426029 USDT (127.21430484260291%)
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) sharpe ratio:			 44.128073643652804
+2020-02-11 00:31:58 (INFO):	(PROFIT REPORT) expected downside:		 -1.0303947264494862

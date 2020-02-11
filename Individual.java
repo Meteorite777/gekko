@@ -29,11 +29,11 @@ public class Individual {
 	
 	//Minutes
 	public int checkTime;
-	private int [] checkTimes = {5, 10, 15, 20, 30}; 
+	private int [] checkTimes = {1, 2, 5, 10, 15}; 
 	
 	//Minutes
 	public int candleLength;
-	private int[] candleLengths = {30, 60, 90, 120, 180, 240, 300, 360};
+	private int[] candleLengths = {60, 90, 120, 180, 240, 300, 360};
 	
 	public double stopLossPercentage;
 	public double stopLossPercentageMax = 0.09;
@@ -125,6 +125,25 @@ public class Individual {
 		crossed.add(ind1);
 		crossed.add(ind2);
 		
+		
+		//Check time
+		if(Math.random() > 0.5) {
+			ind1.checkTime = this.checkTime;
+			ind2.checkTime = other.checkTime;
+		}else {
+			ind2.checkTime = this.checkTime;
+			ind1.checkTime = other.checkTime;
+		}
+		
+		//Candle len
+		if(Math.random() > 0.5) {
+			ind1.candleLength = this.candleLength;
+			ind2.candleLength = other.candleLength;
+		}else {
+			ind2.candleLength = this.candleLength;
+			ind1.candleLength = other.candleLength;
+		}
+		
 		//Stoploss
 		if(Math.random() > 0.5) {
 			ind1.stopLossPercentage = this.stopLossPercentage;
@@ -184,12 +203,15 @@ public class Individual {
 		if(Math.random() > 0.3) {
 			//Change check time
 			indMutant.checkTime = checkTimes[(int) (Math.random() * checkTimes.length)];
-			
+		}else {
+			indMutant.checkTime = this.checkTime;
 		}
 		
 		if(Math.random() > 0.3) {
 			//Change our candle length
 			candleLength = candleLengths[(int) (Math.random() * candleLengths.length)];
+		}else {
+			indMutant.candleLength = this.candleLength;
 		}
 		
 		if(Math.random() > 0.3) {
@@ -199,6 +221,8 @@ public class Individual {
 				indMutant.stopLossPercentage -= indMutant.stopLossPercentageMutation;
 				indMutant.stopLossPercentage = Math.max(indMutant.stopLossPercentageMin, indMutant.stopLossPercentage);
 			}
+		}else {
+			indMutant.stopLossPercentage = this.stopLossPercentage;
 		}
 		
 		if(Math.random() > 0.3) {
@@ -208,6 +232,8 @@ public class Individual {
 				indMutant.deltaCloseBelowEMA -= indMutant.deltaCloseBelowEMAMutation;
 				indMutant.deltaCloseBelowEMA = Math.max(indMutant.deltaCloseBelowEMAMin, indMutant.deltaCloseBelowEMA);
 			}
+		}else {
+			indMutant.deltaCloseBelowEMA = this.deltaCloseBelowEMA;
 		}
 		
 		if(Math.random() > 0.3) {
@@ -217,6 +243,8 @@ public class Individual {
 				indMutant.deltaFarAboveEMA -= indMutant.deltaFarAboveEMAMutation;
 				indMutant.deltaFarAboveEMA = Math.max(indMutant.deltaFarAboveEMAMin, indMutant.deltaFarAboveEMA);
 			}
+		}else {
+			indMutant.deltaFarAboveEMA = this.deltaFarAboveEMA;
 		}
 		
 		if(Math.random() > 0.3) {
@@ -226,6 +254,8 @@ public class Individual {
 				indMutant.deltaFarBelowEMA -= indMutant.deltaFarBelowEMAMutation;
 				indMutant.deltaFarBelowEMA = Math.max(indMutant.deltaFarBelowEMAMin, indMutant.deltaFarBelowEMA);
 			}
+		}else {
+			indMutant.deltaFarBelowEMA = this.deltaFarBelowEMA;
 		}
 		
 		
@@ -237,6 +267,7 @@ public class Individual {
 		//Choose random candle size and check times.
 		checkTime = checkTimes[(int) (Math.random() * checkTimes.length)];
 		candleLength = candleLengths[(int) (Math.random() * candleLengths.length)];
+		
 		
 		//random number for stoploss
 		stopLossPercentage = Math.random();

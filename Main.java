@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class Main {
 	
-	int populationSize = 22;
+	int populationSize = 33;
 	int numberOfGenerations = 33;
 	
 	double mutationRate = 0.90;
@@ -19,7 +19,7 @@ public class Main {
 		
 		//Main loop
 		for(int i = 1; i <= numberOfGenerations; i++) {
-			System.out.println("->\n-> Generation #" + i + " Size: " + population.size());
+			System.out.println("\n->\n-> Generation #" + i);
 			selection();
 			mutation();
 			removeNullTrades();
